@@ -1,0 +1,35 @@
+.bookLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.bookHeader {
+  background-color: var(--ifm-color-primary);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.bookMain {
+  flex: 1;
+  display: flex; /* Enable flexbox for main content area */
+  max-width: 1400px; /* Adjust max-width as needed for overall book layout */
+  margin: 0 auto;
+  width: 100%;
+  padding: 0; /* Remove padding here, will be added to book-content */
+}
+
+.bookContent {
+  flex: 1; /* Take remaining space */
+  padding: 2rem; /* Add padding to the content area */
+  overflow-y: auto; /* Enable scrolling for content if it overflows */
+}
+
+.bookFooter {
+  background-color: var(--ifm-color-primary-darker);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85em;
+}
