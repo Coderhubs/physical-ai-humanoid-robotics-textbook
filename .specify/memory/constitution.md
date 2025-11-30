@@ -1,55 +1,49 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: None -> 1.0.0
+- List of modified principles: All principles are new.
+- Added sections: Purpose, Audience, Writing Style, Structure Principles (3), Quality Standards (3).
+- Removed sections: None.
+- Templates requiring updates:
+    - .specify/templates/plan-template.md: ⚠ pending
+    - .specify/templates/spec-template.md: ⚠ pending
+    - .specify/templates/tasks-template.md: ⚠ pending
+    - .specify/templates/commands/sp.constitution.md: ✅ updated
+- Follow-up TODOs: None.
+-->
+# AI-native textbook on Physical AI & Humanoid Robotics Constitution
+
+## Purpose
+Educate and empower a diverse audience to understand, develop, and innovate in Physical AI and Humanoid Robotics, leveraging AI-native features like RAG chatbot, personalization, and multi-language support.
+
+## Audience
+Developers, researchers, students, and enthusiasts in AI and robotics, including those in Urdu-speaking regions.
+
+## Writing Style
+Clear, concise, technically accurate, engaging, and accessible, suitable for a Docusaurus book format, incorporating examples and practical applications.
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Structure Principle 1: Modularity and Navigability
+The textbook will be structured into logical modules, chapters, and sections to ensure ease of navigation and comprehension. Content should be easily discoverable and cross-referenced.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Structure Principle 2: AI-Native Integration
+The textbook will leverage AI-native features such as a RAG chatbot for interactive Q&A, personalization of learning paths, and seamless integration with Claude Code subagents for hands-on exercises and exploration. Urdu translation will be a core feature.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Structure Principle 3: Practical Application & Hands-on Learning
+Content will prioritize practical applications, code examples, and interactive simulations where applicable, fostering a hands-on learning experience. Claude Code subagents will facilitate direct experimentation.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Quality Standard 1: Technical Accuracy and Rigor
+All technical content must be accurate, up-to-date, and rigorously reviewed by subject matter experts. Concepts should be explained with precision and clarity.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Quality Standard 2: Clarity and Accessibility
+Content must be presented in a clear, concise, and accessible manner, avoiding unnecessary jargon while maintaining technical depth. Language should be inclusive and easy to understand for the target audience, including Urdu speakers.
 
-### [PRINCIPLE_6_NAME]
-
-
-[PRINCIPLE__DESCRIPTION]
-
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
-
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Quality Standard 3: Interactivity and Engagement
+The textbook will actively engage learners through interactive elements, thought-provoking questions, practical exercises, and the RAG chatbot, encouraging active participation and deeper understanding.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Amendments to these principles require consensus among project leads and contributors, followed by a minor version bump and documentation in the commit history. The constitution follows semantic versioning: MAJOR for breaking changes, MINOR for new principles, PATCH for clarifications. All changes documented. Regular reviews (quarterly) will ensure ongoing compliance with these principles and alignment with project goals and hackathon requirements.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-11-30 | **Last Amended**: 2025-11-30
