@@ -1,112 +1,129 @@
-# Feature: FastAPI RAG Chatbot
+# Feature: Integrated RAG Chatbot for Book Content with Stunning UI
 
-## Phase 1: Setup
+## Phase 1: Backend Infrastructure Setup
 
-- [ ] T001 Create base project directory structure for FastAPI application
-- [ ] T002 Initialize `uv` project with `pyproject.toml` and specified dependencies
-- [ ] T003 Configure `python-dotenv` for environment variable management
-- [ ] T004 Create `alembic.ini` and `env.py` for Alembic migrations
-- [ ] T005 Initialize Alembic environment in `migrations/`
+- [x] T001 Create the base directory structure for the FastAPI application (e.g., `backend/RAG_Chatbot/src/`).
+- [x] T002 Initialize `uv` project with `pyproject.toml` including `fastapi`, `uvicorn`, `openai[agents]`, `qdrant-client`, `sqlmodel`, `alembic`, `python-dotenv`, `sentence-transformers`, `tqdm`, `pymupdf`, `pydantic-settings`.
+- [x] T003 Configure `python-dotenv` for managing environment variables (e.g., API keys, database URLs).
+- [x] T004 Define application settings using `pydantic-settings` in `backend/RAG_Chatbot/src/settings.py`.
+- [x] T005 Set up Neon Postgres database connection using SQLModel in `backend/RAG_Chatbot/src/database.py`.
+- [x] T006 Initialize Alembic for database migrations in `backend/RAG_Chatbot/migrations/` with `alembic.ini` and `env.py`.
+- [x] T007 Create an initial Alembic migration script for base database schema.
+- [x] T008 Implement the core FastAPI application instance in `backend/RAG_Chatbot/src/main.py`.
 
-## Phase 2: Foundational
+## Phase 2: Qdrant Integration and RAG Tool Development
 
-- [ ] T006 [P] Implement base FastAPI application in `src/main.py`
-- [ ] T007 [P] Define `settings.py` using `pydantic-settings` for application configuration
-- [ ] T008 [P] Configure database connection with SQLModel in `src/database.py`
-- [ ] T009 [P] Create initial Alembic migration script for database setup
+**Goal**: Enable the chatbot to retrieve relevant information from Qdrant Cloud.
 
-## Phase 3: User Story 1: Chatbot Core Functionality [US1]
+- [ ] T009 [P] Initialize `QdrantClient` for Qdrant Cloud Free Tier in `backend/RAG_Chatbot/src/qdrant_client.py`.
+- [ ] T010 [P] Implement embedding model initialization using `sentence-transformers` for document and query embeddings in `backend/RAG_Chatbot/src/embeddings.py`.
+- [ ] T011 Develop the `search_qdrant` function that queries Qdrant with `top-k=5` and formats the retrieved context in `backend/RAG_Chatbot/src/rag_tool.py`.
+- [ ] T012 Wrap the `search_qdrant` function as a custom tool for the OpenAI Agents SDK in `backend/RAG_Chatbot/src/rag_tool.py`.
+- [ ] T013 Implement document ingestion logic using `pymupdf` to parse book content and generate embeddings, then store in Qdrant, in `backend/RAG_Chatbot/src/document_processor.py`.
+- [ ] T014 Create a `POST /upload-book-content` endpoint in `backend/RAG_Chatbot/src/main.py` for ingesting book content into Qdrant.
 
-**Goal**: Establish the basic FastAPI chat endpoint with an OpenAI Agent and streaming responses.
+## Phase 3: OpenAI Agent and Core Chat Endpoint
 
-- [ ] T010 [US1] Define `AgentExecutor` instance in `src/agent.py`
-- [ ] T011 [US1] Implement streaming response logic for `AgentExecutor` in `src/agent.py`
-- [ ] T012 [US1] Create `POST /chat` endpoint in `src/main.py` for basic chat interaction
-- [ ] T013 [US1] Integrate `AgentExecutor` with `POST /chat` endpoint in `src/main.py`
+**Goal**: Integrate the OpenAI Agent and establish the primary chat interface.
 
-## Phase 4: User Story 2: Qdrant RAG Integration [US2]
+- [ ] T015 Initialize the OpenAI `AgentExecutor` instance in `backend/RAG_Chatbot/src/agent.py`.
+- [ ] T016 Add the custom RAG tool (from T012) to the `AgentExecutor`'s list of available tools in `backend/RAG_Chatbot/src/agent.py`.
+- [ ] T017 Implement logic for streaming responses from the `AgentExecutor` to the client in `backend/RAG_Chatbot/src/agent.py`.
+- [ ] T018 Create a `POST /chat` endpoint in `backend/RAG_Chatbot/src/main.py` for handling chat interactions.
+- [ ] T019 Integrate the `AgentExecutor` with the `POST /chat` endpoint to process user queries and generate responses in `backend/RAG_Chatbot/src/main.py`.
 
-**Goal**: Develop a custom RAG tool that queries Qdrant Cloud for context, and ensure the agent uses it when appropriate.
+## Phase 4: Chat Modes Implementation (`full` and `selection`)
 
-- [ ] T014 [US2] Implement `QdrantClient` initialization in `src/rag_tool.py`
-- [ ] T015 [US2] Create embedding model initialization using `sentence-transformers` in `src/embeddings.py`
-- [ ] T016 [US2] Develop `search_qdrant` function that queries Qdrant Cloud (`top-k=5`) and formats results in `src/rag_tool.py`
-- [ ] T017 [US2] Wrap `search_qdrant` as a custom `OpenAI Agents SDK` tool in `src/rag_tool.py`
-- [ ] T018 [US2] Add the custom RAG tool to the `AgentExecutor` definition in `src/agent.py`
-- [ ] T019 [US2] Implement document indexing functionality using `pymupdf` and `Qdrant` client in `src/document_processor.py`
-- [ ] T020 [US2] Create an endpoint `POST /upload` for document ingestion and indexing in `src/main.py`
+**Goal**: Implement the two distinct chat interaction modes as required.
 
-## Phase 5: User Story 3: Chat Modes Implementation [US3]
+- [ ] T020 Modify the `POST /chat` endpoint in `backend/RAG_Chatbot/src/main.py` to accept a `mode` parameter (`"full"` or `"selection"`) and an optional `selected_text` parameter.
+- [ ] T021 Implement the `mode="full"` logic within `POST /chat`, allowing the agent to automatically decide when to use the RAG tool for context.
+- [ ] T022 Implement the `mode="selection"` logic within `POST /chat`, injecting `selected_text` as forced context for the agent and explicitly preventing the RAG tool from being called.
 
-**Goal**: Implement "full" and "selection" chat modes in the `POST /chat` endpoint.
+## Phase 5: Data Persistence with Neon Postgres
 
-- [ ] T021 [US3] Modify `POST /chat` endpoint in `src/main.py` to accept a `mode` parameter
-- [ ] T022 [US3] Implement `mode="full"` logic, allowing agentic RAG, in `src/main.py`
-- [ ] T023 [US3] Implement `mode="selection"` logic, injecting `selected_text` and disabling RAG tool, in `src/main.py`
+**Goal**: Store chat history and book content metadata in the Neon Postgres database.
 
-## Phase 6: User Story 4: Persistence with Neon Postgres [US4]
+- [ ] T023 Define SQLModel for `ChatMessage` in `backend/RAG_Chatbot/src/models/chat.py` (e.g., fields for `session_id`, `role`, `content`, `timestamp`).
+- [ ] T024 Define SQLModel for `BookContentMetadata` in `backend/RAG_Chatbot/src/models/book.py` (e.g., fields for `filename`, `upload_timestamp`, `qdrant_collection_id`).
+- [ ] T025 Generate a new Alembic migration script to add the `ChatMessage` and `BookContentMetadata` tables to the database.
+- [ ] T026 Implement CRUD operations for `ChatMessage` in `backend/RAG_Chatbot/src/services/chat_history_service.py`.
+- [ ] T027 Integrate `chat_history_service` into the `POST /chat` endpoint to save chat messages in `backend/RAG_Chatbot/src/main.py`.
+- [ ] T028 Implement CRUD operations for `BookContentMetadata` in `backend/RAG_Chatbot/src/services/book_content_service.py`.
+- [ ] T029 Integrate `book_content_service` into the `POST /upload-book-content` endpoint to save metadata after ingestion in `backend/RAG_Chatbot/src/main.py`.
 
-**Goal**: Store chat history and other relevant data in a Neon Postgres database using SQLModel and Alembic.
+## Phase 6: Backend Polish and Documentation
 
-- [ ] T024 [US4] Define `ChatMessage` SQLModel in `src/models/chat.py` (e.g., `id`, `session_id`, `role`, `content`, `timestamp`)
-- [ ] T025 [US4] Define `Document` SQLModel in `src/models/document.py` (e.g., `id`, `filename`, `content_hash`, `upload_timestamp`)
-- [ ] T026 [US4] Generate new Alembic migration script for `ChatMessage` and `Document` models
-- [ ] T027 [US4] Implement CRUD operations for `ChatMessage` in `src/services/chat_history.py`
-- [ ] T028 [US4] Integrate `chat_history` service into `POST /chat` endpoint for saving messages in `src/main.py`
-- [ ] T029 [US4] Implement CRUD operations for `Document` in `src/services/document_store.py`
-- [ ] T030 [US4] Integrate `document_store` service into `POST /upload` endpoint for saving document metadata in `src/main.py`
+- [ ] T030 Implement comprehensive error handling and logging across the backend application.
+- [ ] T031 Create a `README.md` for the `backend/RAG_Chatbot/` directory detailing setup, environment variables, running the application, and API endpoints.
+- [ ] T032 Review and refine `pyproject.toml` to ensure all dependencies are correctly specified and project metadata is accurate.
 
-## Phase 7: Polish & Cross-Cutting Concerns
+## Phase 7: Frontend UI Development (React)
 
-- [ ] T031 Add error handling and logging across the application
-- [ ] T032 Implement basic authentication/authorization for API endpoints (if not covered by an explicit US)
-- [ ] T033 Create comprehensive `README.md` with setup, usage, and API documentation
-- [ ] T034 Review and refine `pyproject.toml` for final dependency management and project metadata
+**Goal**: Build a stunning, interactive chat interface for the RAG chatbot.
+
+- [ ] T033 Create the frontend project structure (e.g., `frontend/rag-chatbot-ui/`).
+- [ ] T034 Initialize a React project within `frontend/rag-chatbot-ui/` using Vite or Create React App.
+- [ ] T035 [P] Design and implement the main chat layout component in `frontend/rag-chatbot-ui/src/components/ChatLayout.tsx`.
+- [ ] T036 [P] Develop a `MessageDisplay` component to render chat messages, including user queries and agent responses (streaming), in `frontend/rag-chatbot-ui/src/components/MessageDisplay.tsx`.
+- [ ] T037 [P] Create a `ChatInput` component for user text input and sending messages in `frontend/rag-chatbot-ui/src/components/ChatInput.tsx`.
+- [ ] T038 Implement a `SelectedTextContext` or similar mechanism to handle and inject user-selected text for the "selection" chat mode in `frontend/rag-chatbot-ui/src/context/SelectedTextContext.tsx`.
+- [ ] T039 Implement API integration logic to communicate with the FastAPI backend (`/chat`, `/upload-book-content` endpoints) in `frontend/rag-chatbot-ui/src/services/api.ts`.
+- [ ] T040 Develop the main `App` component to orchestrate `ChatLayout`, `MessageDisplay`, `ChatInput`, and integrate with API services in `frontend/rag-chatbot-ui/src/App.tsx`.
+- [ ] T041 Implement styling (e.g., using CSS modules, Tailwind CSS, or a UI library like Chakra UI/Material-UI) to achieve a stunning and responsive design in `frontend/rag-chatbot-ui/src/styles/` and component-specific styles.
+- [ ] T042 Add functionality for uploading book content via the UI to the `/upload-book-content` endpoint in `frontend/rag-chatbot-ui/src/components/BookUploader.tsx`.
+- [ ] T043 Implement a toggle or selection mechanism for "full" vs. "selection" chat modes in `frontend/rag-chatbot-ui/src/components/ChatModeSelector.tsx`.
+- [ ] T044 Ensure robust error handling and user feedback for API calls and streaming responses in the UI.
+- [ ] T045 Implement responsive design for various screen sizes (desktop, tablet, mobile).
+- [ ] T046 Create a `README.md` for the `frontend/rag-chatbot-ui/` directory with setup and usage instructions.
 
 ## Dependencies
 
-- Phase 1 must complete before Phase 2.
-- Phase 2 must complete before Phase 3, Phase 4, Phase 5, and Phase 6.
-- Phase 3, Phase 4, Phase 5, and Phase 6 can be developed largely in parallel after Foundational tasks, but US4 (Persistence) might be beneficial to start early for data models.
-- Phase 7 depends on all previous phases.
+- Phase 1 must complete before Phase 2, Phase 3, Phase 5.
+- Phase 2 (Qdrant) and Phase 3 (OpenAI Agent) can proceed in parallel once Phase 1 is done.
+- Phase 4 (Chat Modes) depends on Phase 3.
+- Phase 5 (Persistence) depends on Phase 1 and its services will integrate with endpoints from Phase 3 and Phase 2.
+- Phase 6 (Backend Polish) depends on all previous backend phases.
+- Phase 7 (Frontend) depends on backend APIs (from Phases 3, 4, 5) being available, but initial UI structure can be developed in parallel with later backend phases.
 
 ## Parallel Execution Examples
 
-### User Story 1: Chatbot Core Functionality
-- T010, T011, T012, T013 can be developed sequentially, but aspects of T010 (agent setup) could be done alongside T012 (endpoint definition).
-
-### User Story 2: Qdrant RAG Integration
-- T014, T015, T016 can be done in parallel as they set up independent components (Qdrant client, embeddings, search function). T017 depends on T016, and T018 depends on T017. T019 and T020 are dependent on the Qdrant setup but can run somewhat in parallel with the agent integration.
-
-### User Story 3: Chat Modes Implementation
-- T021, T022, T023 can be worked on sequentially within the `POST /chat` endpoint.
-
-### User Story 4: Persistence with Neon Postgres
-- T024 and T025 can be done in parallel as they define independent SQLModels. T026 depends on these. T027 and T029 can be done in parallel after models are defined. T028 and T030 depend on their respective services.
+- **Backend Phases 2 & 3 Parallelism**:
+    - T009-T010 (Qdrant client & embeddings) can be developed alongside T015 (AgentExecutor setup).
+    - T011 (search_qdrant) can be developed in parallel with T017 (streaming response logic).
+- **Backend Phase 5 (Persistence) Parallelism**:
+    - T023 (ChatMessage model) and T024 (BookContentMetadata model) can be defined independently and in parallel.
+    - T026 (Chat history service) and T028 (Book content service) can be implemented in parallel after their respective models are defined.
+- **Frontend Phase 7 Parallelism**:
+    - T035 (ChatLayout), T036 (MessageDisplay), T037 (ChatInput) can be developed in parallel.
+    - T038 (SelectedTextContext) and T039 (API integration) can be developed concurrently after core backend endpoints are defined.
 
 ## Implementation Strategy
 
-The implementation will follow an MVP-first approach, iteratively building out features.
+The implementation will follow a modular and iterative approach:
 
-1.  **Core Chatbot (US1):** Focus on getting a basic, streaming chat interaction working with the OpenAI Agent.
-2.  **RAG Integration (US2):** Integrate Qdrant and the custom RAG tool, ensuring the agent intelligently uses it.
-3.  **Chat Modes (US3):** Add the "full" and "selection" modes to the chat endpoint.
-4.  **Persistence (US4):** Implement data models and services for chat history and document storage.
-5.  **Refinement:** Address error handling, logging, and documentation.
+1.  **Core Backend Infrastructure**: Establish the FastAPI application, settings, and database connection.
+2.  **RAG Foundation**: Get Qdrant integrated and the custom RAG tool working.
+3.  **Core Chat Backend**: Set up the OpenAI Agent and link it with the RAG tool and the main chat endpoint.
+4.  **Chat Modes**: Implement the specific "full" and "selection" chat behaviors on the backend.
+5.  **Data Persistence**: Add chat history and book content metadata storage on the backend.
+6.  **Basic Frontend UI**: Create the core React application and basic chat interface components.
+7.  **Frontend-Backend Integration**: Connect the frontend UI to the backend APIs.
+8.  **Stunning UI/UX**: Focus on styling, responsiveness, and user experience enhancements for the frontend.
+9.  **Refinement**: Address comprehensive error handling, logging, and documentation for both backend and frontend.
 
 ## Report
 
-- tasks.md generated successfully.
-- Total tasks: 34
-- Tasks per user story:
-    - Setup: 5
-    - Foundational: 4
-    - US1: Chatbot Core Functionality: 4
-    - US2: Qdrant RAG Integration: 7
-    - US3: Chat Modes Implementation: 3
-    - US4: Persistence with Neon Postgres: 7
-    - Polish & Cross-Cutting Concerns: 4
-- Parallel opportunities identified within and across user stories.
-- Independent test criteria for each story will be derived during implementation.
-- Suggested MVP scope: Phase 1, Phase 2, and Phase 3 (Chatbot Core Functionality).
-- All tasks follow the checklist format.
+- tasks.md generated successfully, specifically addressing the backend and frontend requirements for "Integrated RAG Chatbot Development with Stunning UI."
+- Total tasks: 46 (32 backend + 14 frontend)
+- Tasks per phase:
+    - Backend Infrastructure Setup: 8
+    - Qdrant Integration and RAG Tool Development: 6
+    - OpenAI Agent and Core Chat Endpoint: 5
+    - Chat Modes Implementation: 3
+    - Data Persistence with Neon Postgres: 7
+    - Backend Polish and Documentation: 3
+    - Frontend UI Development (React): 14
+- Parallel opportunities are identified across both backend and frontend to optimize development flow.
+- Each task is designed to be specific and independently actionable.
+- The implementation strategy emphasizes a structured, iterative build-out, starting with backend core, then basic frontend, then integration and UI polish.
