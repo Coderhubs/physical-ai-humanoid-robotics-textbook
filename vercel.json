@@ -1,8 +1,7 @@
 {
-  "outputDirectory": "build",
+  "buildCommand": "cd frontend && npm ci && npm run build",
+  "outputDirectory": "frontend/build",
+  "framework": "docusaurus",
   "cleanUrls": true,
-  "trailingSlash": true,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ]
+  "trailingSlash": true
 }

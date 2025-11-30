@@ -21,7 +21,6 @@ const config: Config = {
   baseUrl: '/',
   trailingSlash: true, // ✅ helps Vercel routing
 
-
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'facebook', // Usually your GitHub org/user name.
@@ -103,8 +102,8 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Introduction',
+              to: '/docs/chapter-1-introduction',
             },
           ],
         },
